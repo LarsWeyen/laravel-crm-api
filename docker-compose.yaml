@@ -10,6 +10,16 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - 8000:8000
+    develop:
+      watch:
+        - path: .
+          target: /app
+          action: sync
+
     environment:
       - DB_CONNECTION=pgsql
       - DB_HOST=db
