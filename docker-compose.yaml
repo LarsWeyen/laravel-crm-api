@@ -1,0 +1,38 @@
+networks:
+      dev:
+          driver: bridge
+
+services:
+  api:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=crm_database
+      - DB_USERNAME=crm_user
+      - DB_PASSWORD=crm_password
+    networks: 
+      - dev
+
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=crm_user
+      - POSTGRES_PASSWORD=crm_password
+      - POSTGRES_DB=crm_database
+    ports:
+      - 5433:5432
+    restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - dev
+
+volumes:
+  pg_data:
